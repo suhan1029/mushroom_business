@@ -2,3 +2,8 @@ streamlit
 Pillow
 python-dotenv
 streamlit-option-menu
+plotly
+pandas
+langchain
+langchain-openai
+langchain-core

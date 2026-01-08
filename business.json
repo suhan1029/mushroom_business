@@ -1,0 +1,56 @@
+{
+  "company_info": {
+    "name": "주식회사 써클리프 (CIRCLEAF)",
+    "brand_name": "버컵 (Burcup)",
+    "ceo": "김예랑",
+    "cto": "김수한",
+    "cmo": "조아영",
+    "cfo": "공다희",
+    "cpo_1": "박예원",
+    "cpo_2": "김태빈",
+    "establishment_date": "2026-01-12",
+    "industry": "친환경 소재 제조업 / B2B 친환경 소모품 제조 및 납품업",
+    "location": "경기도 평택시 산단로 76, 평택하이테크지식산업센터 A동 5층 512호",
+    "contact": {
+      "phone": "031-8094-5723",
+      "email": "contact@circleaf.co.kr"
+    }
+  },
+  "product_info": {
+    "description": "버려지는 버섯 폐배지를 주원료로 만든 친환경 컵홀더",
+    "features": [
+      "100% 업사이클링: 버섯 폐배지 활용",
+      "획기적인 비용 절감: 기존 종이 홀더 대비 저렴",
+      "탁월한 단열 성능: 균사체의 다공성 구조로 열 차단",
+      "100% 생분해: 사용 후 45일 이내 퇴비화",
+      "내구성: 종이보다 질기고 형태 유지가 뛰어남"
+    ],
+    "manufacturing_process": [
+      "1. 자원 수거 (폐배지 수거)",
+      "2. 정밀 멸균",
+      "3. 균사 배양 (5~7일간 전용 몰드에서 배양)",
+      "4. 건조 및 완성"
+    ]
+  },
+  "business_model": {
+    "partners": "버섯 농가, 컵홀더 양산 공장, B2B 고객사",
+    "revenue_streams": "컵홀더 판매, OEM 제작, 기업 협업",
+    "target_customers": "지역 카페, 저가 커피 프랜차이즈, 대형마트"
+  },
+  "equity_info": {
+    "total_shares": 10000,
+    "shareholders": [
+      {"name": "김예랑", "role": "CEO", "equity": "68%"},
+      {"name": "김수한", "role": "CTO", "equity": "10%"},
+      {"name": "조아영", "role": "CMO", "equity": "10%"},
+      {"name": "공다희", "role": "CFO", "equity": "6%"},
+      {"name": "박예원", "role": "CPO", "equity": "4%"},
+      {"name": "김태빈", "role": "CPO", "equity": "2%"}
+    ]
+  },
+  "future_plans": {
+    "1_year_goal": "평택 공장 가동 (월 10만 개), 벤처기업 인증, 카페 50곳 납품",
+    "3_year_goal": "대형 프랜차이즈(메가, 컴포즈 등) OEM 계약, 제품 라인업 확장(포장재, 화분), 글로벌 시장 진출",
+    "marketing_strategy": "서울 카페쇼 참가, ESG 캠페인, 크라우드 펀딩, 글로벌 B2B 플랫폼 활용"
+  }
+}

@@ -6,9 +6,22 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 from streamlit_option_menu import option_menu
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import json
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 # Load environment variables
 load_dotenv()
+
+# Load Business Data for Chatbot
+def load_business_data():
+    with open("business.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+business_data = load_business_data()
 
 # Email sending function
 def send_email(name, sender_email, category, message):
@@ -137,8 +150,8 @@ with st.sidebar:
     # Theme-aware option menu
     menu = option_menu(
         menu_title="메인 메뉴",
-        options=["홈", "제품 소개", "비즈니스 모델", "Q&A", "파트너십"],
-        icons=["house", "box-seam", "briefcase", "question-circle", "envelope"],
+        options=["홈", "제품 소개", "비즈니스 모델", "지분 정보", "향후 계획", "Q&A", "파트너십"],
+        icons=["house", "box-seam", "briefcase", "pie-chart", "calendar-check", "question-circle", "envelope"],
         menu_icon="cast",
         default_index=0,
         styles={
@@ -251,17 +264,8 @@ elif menu == "제품 소개":
         col1, col2 = st.columns([1, 1.2], gap="large")
         with col1:
             if promo2:
-                st.markdown("""
-                    <div style="
-                        padding: 10px;
-                        background: white;
-                        border-radius: 20px;
-                        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                    ">
-                """, unsafe_allow_html=True)
                 st.image(promo2, width='stretch')
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.caption("<p style='text-align:center; margin-top:10px;'>버컵 실제 활용 모습</p>", unsafe_allow_html=True)
+                st.caption("<p style='text-align:center; margin-top:10px;'>버컵(Burcup) 실제 활용 모습</p>", unsafe_allow_html=True)
         
         with col2:
             st.markdown("### 💡 혁신적인 기술력")
@@ -489,49 +493,345 @@ elif menu == "비즈니스 모델":
         </div>
     """, unsafe_allow_html=True)
 
-# Q&A Section
-elif menu == "Q&A":
-    st.title("❓ 자주 묻는 질문")
-    st.markdown("버컵에 대해 가장 많이 궁금해하시는 질문들을 모았습니다.")
+# Equity Section
+elif menu == "지분 정보":
+    st.title("📊 회사 지분 정보")
+    st.markdown("써클리프(CIRCLEAF)의 투명한 지분 구조와 핵심 인력을 소개합니다.")
     st.write("")
-
-    faqs = [
-        {
-            "q": "🍄 버섯 냄새가 나지 않나요?",
-            "a": "전혀 나지 않습니다. 특수 가공 및 건조 과정을 통해 냄새를 완벽히 제거하며, 무향의 깨끗한 상태로 제공됩니다."
-        },
-        {
-            "q": "🔥 뜨거운 음료에도 안전한가요?",
-            "a": "네, 버섯 균사체는 천연 단열재 역할을 합니다. 기존 종이 홀더보다 열 차단율이 약 20% 더 우수하여 손을 안전하게 보호합니다."
-        },
-        {
-            "q": "💧 물에 젖으면 흐물거리지 않나요?",
-            "a": "천연 왁스 코팅 옵션을 통해 내수성을 확보했습니다. 아이스 음료의 결로 현상에도 충분히 견딜 수 있도록 설계되었습니다."
-        },
-        {
-            "q": "📏 사이즈 조절이 가능한가요?",
-            "a": "몰드 제작 방식이므로 고객사가 원하는 모든 사이즈와 형태로 맞춤 제작이 가능합니다. 브랜드 로고 각인도 지원합니다."
-        },
-        {
-            "q": "💰 생산 단가는 어느 정도인가요?",
-            "a": "원료비는 거의 0원에 가깝고, 저온/저에너지 공정으로 매우 경제적입니다. 기존 종이 컵홀더 대비 높은 가격 경쟁력을 갖추고 있습니다."
-        }
+    
+    # Data preparation
+    equity_data = [
+        {"순번": 1, "주주명": "김예랑", "직함": "CEO", "지분율": 68, "주식수": 6800, "고유번호": "740291-50*****"},
+        {"순번": 2, "주주명": "김수한", "직함": "CTO", "지분율": 10, "주식수": 1000, "고유번호": "318570-49*****"},
+        {"순번": 3, "주주명": "조아영", "직함": "CMO", "지분율": 10, "주식수": 1000, "고유번호": "129684-57*****"},
+        {"순번": 4, "주주명": "공다희", "직함": "CFO", "지분율": 6, "주식수": 600, "고유번호": "804271-93*****"},
+        {"순번": 5, "주주명": "박예원", "직함": "CPO", "지분율": 4, "주식수": 400, "고유번호": "902648-17*****"},
+        {"순번": 6, "주주명": "김태빈", "직함": "CPO", "지분율": 2, "주식수": 200, "고유번호": "556903-18*****"},
     ]
-
-    for item in faqs:
+    df = pd.DataFrame(equity_data)
+    
+    # Top metrics in a nice row
+    m1, m2, m3 = st.columns(3)
+    with m1:
         st.markdown(f"""
-            <div style="
-                padding: 1.5rem;
-                border-radius: 10px;
-                border-left: 5px solid #2E7D32;
-                background-color: rgba(128, 128, 128, 0.05);
-                margin-bottom: 1.5rem;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            ">
-                <h3 style="margin-top: 0; color: #2E7D32; font-size: 1.2rem;">{item['q']}</h3>
-                <p style="margin-bottom: 0; line-height: 1.6;">{item['a']}</p>
+            <div style="background: rgba(46, 125, 50, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(46, 125, 50, 0.1); text-align: center;">
+                <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">총 발행주식 수</p>
+                <h2 style="margin: 0; color: #2E7D32;">10,000주</h2>
             </div>
         """, unsafe_allow_html=True)
+    with m2:
+        st.markdown(f"""
+            <div style="background: rgba(46, 125, 50, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(46, 125, 50, 0.1); text-align: center;">
+                <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">총 주주</p>
+                <h2 style="margin: 0; color: #2E7D32;">6명</h2>
+            </div>
+        """, unsafe_allow_html=True)
+    with m3:
+        st.markdown(f"""
+            <div style="background: rgba(46, 125, 50, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(46, 125, 50, 0.1); text-align: center;">
+                <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">액면가</p>
+                <h2 style="margin: 0; color: #2E7D32;">100원</h2>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    st.write("")
+    st.write("")
+
+    col1, col2 = st.columns([1.2, 1], gap="large")
+    
+    with col1:
+        # Ultra-fancy Donut Chart with go.Pie for more control
+        colors = ['#2E7D32', '#43A047', '#66BB6A', '#81C784', '#A5D6A7', '#C8E6C9'] # Professional Green Palette
+        
+        fig = go.Figure(data=[go.Pie(
+            labels=df['주주명'],
+            values=df['지분율'],
+            hole=0.65,
+            marker=dict(
+                colors=colors, 
+                line=dict(color='#ffffff', width=3)
+            ),
+            textinfo='label+percent',
+            textposition='outside',
+            pull=[0.1, 0, 0, 0, 0, 0], # CEO slice pops out more
+            hoverinfo='label+percent+value',
+            customdata=df['직함'],
+            hovertemplate="<b>%{label}</b><br>직함: %{customdata}<br>지분율: %{percent}<br>주식수: %{value}주<extra></extra>"
+        )])
+        
+        fig.update_layout(
+            annotations=[
+                dict(
+                    text='<b>CIRCLEAF</b><br>Equity', 
+                    x=0.5, y=0.5, 
+                    font_size=22, 
+                    showarrow=False, 
+                    font_color="#2E7D32"
+                )
+            ],
+            showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(t=60, b=60, l=60, r=60),
+            height=500,
+            hoverlabel=dict(
+                bgcolor="white",
+                font_size=14,
+                font_family="Pretendard, sans-serif"
+            )
+        )
+        
+        st.plotly_chart(fig, width='stretch')
+
+    with col2:
+        st.markdown("### 📋 주주 명부")
+        
+        # Combined Style and Table to avoid rendering issues
+        table_content = """
+        <style>
+            .equity-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.9rem;
+            }
+            .equity-table th {
+                background-color: rgba(46, 125, 50, 0.2);
+                color: #2E7D32;
+                padding: 10px;
+                text-align: center;
+                border-bottom: 2px solid #2E7D32;
+            }
+            .equity-table td {
+                padding: 12px 10px;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+                text-align: center;
+            }
+            .highlight-row {
+                background-color: rgba(46, 125, 50, 0.05);
+                font-weight: bold;
+            }
+        </style>
+        <table class="equity-table">
+            <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>주주명</th>
+                    <th>직함</th>
+                    <th>주식 수</th>
+                    <th>지분율</th>
+                </tr>
+            </thead>
+            <tbody>
+        """
+        
+        for index, row in df.iterrows():
+            row_class = "highlight-row" if row['주주명'] == "김예랑" else ""
+            table_content += f'<tr class="{row_class}">'
+            table_content += f'<td>{row["순번"]}</td>'
+            table_content += f'<td>{row["주주명"]}</td>'
+            table_content += f'<td>{row["직함"]}</td>'
+            table_content += f'<td>{row["주식수"]:,}</td>'
+            table_content += f'<td style="color: #2E7D32; font-weight: bold;">{row["지분율"]}%</td>'
+            table_content += '</tr>'
+        
+        table_content += "</tbody></table>"
+        
+        st.markdown(table_content, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+            <div style="margin-top: 2rem; padding: 1rem; border-radius: 10px; background: rgba(128, 128, 128, 0.05); font-size: 0.85rem; opacity: 0.8;">
+                <p style="margin: 0;">* 위 데이터는 2026년 1월 5일 기준 데이터입니다.</p>
+                <p style="margin: 5px 0 0 0;">* 모든 주식은 보통주로 구성되어 있습니다.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+# Future Plans Section
+elif menu == "향후 계획":
+    st.title("🚀 Future Roadmap")
+    st.markdown("써클리프(CIRCLEAF)와 버컵(Burcup)이 그려나갈 지속 가능한 미래 비전입니다.")
+    st.write("")
+
+    # Corporate Info Card
+    st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        ">
+            <h3 style="color: #A5D6A7; margin-top: 0;">🏢 법인 설립 정보</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">회사명</p>
+                    <b style="font-size: 1.2rem;">주식회사 써클리프 (CIRCLEAF)</b>
+                </div>
+                <div>
+                    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">설립 예정일</p>
+                    <b style="font-size: 1.2rem;">2026년 1월 12일</b>
+                </div>
+                <div>
+                    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">대표자</p>
+                    <b style="font-size: 1.2rem;">김예랑</b>
+                </div>
+                <div>
+                    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">주요 업종</p>
+                    <b style="font-size: 1.1rem;">친환경 소재 제조 / B2B 납품</b>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Intellectual Property Section
+    st.markdown("### 🏷️ 브랜드 자산화 전략")
+    c1, c2 = st.columns([1.5, 1])
+    with c1:
+        st.markdown("""
+            <div style="background: rgba(46, 125, 50, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 5px solid #2E7D32;">
+                <h4 style="margin-top: 0; color: #2E7D32;">상표 출원 및 IP 확보</h4>
+                <p><b>'버컵(Burcup)'</b> 브랜드 네이밍 및 BI 로고 상표권 출원을 통해 무형 자산 가치를 극대화합니다.</p>
+                <ul style="font-size: 0.95rem; line-height: 1.6;">
+                    <li><b>출원인:</b> 주식회사 버컵 (법인 명의 자산화)</li>
+                    <li><b>진행 일정:</b> 2026년 1월 (설립 등기 직후 즉시)</li>
+                </ul>
+            </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        st.markdown("""
+            <div style="display: flex; justify-content: center; align-items: center; height: 100%; font-size: 100px;">
+                🔖
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+    st.divider()
+
+    # Timeline Logic
+    st.markdown("<h2 style='text-align: center; margin-bottom: 2rem;'>📅 성장을 향한 단계별 마일스톤</h2>", unsafe_allow_html=True)
+    
+    # 1-Year Plan
+    with st.container():
+        st.markdown("#### 🌱 1단계: 기반 구축 및 시장 진입 (설립 ~ 1년)")
+        tc1, tc2 = st.columns(2)
+        with tc1:
+            st.markdown("""
+                <div style="background: white; padding: 1.5rem; border-radius: 15px; border: 1px solid #E0E0E0; height: 100%; color: #333;">
+                    <b style="color: #2E7D32; font-size: 1.1rem;">🛠️ 생산 및 공신력 확보</b>
+                    <ul style="margin-top: 10px; font-size: 0.9rem;">
+                        <li><b>평택 공장 가동:</b> 월 10만 개 생산 규모 자동화 라인 구축</li>
+                        <li><b>인증 획득:</b> 벤처기업, ISO 14001, 친환경 표지 인증</li>
+                        <li><b>매출 발생:</b> 경기 남부 카페 50곳 직납 계약</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+        with tc2:
+            st.markdown("""
+                <div style="background: #F1F8E9; padding: 1.5rem; border-radius: 15px; border: 1px solid #C8E6C9; height: 100%; color: #333;">
+                    <b style="color: #388E3C; font-size: 1.1rem;">📢 마케팅 전략</b>
+                    <ul style="margin-top: 10px; font-size: 0.9rem;">
+                        <li><b>B2B 박람회:</b> 서울 카페쇼 참여 및 실물 샘플 배포</li>
+                        <li><b>ESG 캠페인:</b> '버컵 사용 = 친환경 매장' 현판 캠페인</li>
+                        <li><b>크라우드 펀딩:</b> 와디즈/텀블벅 홍보 및 팬덤 구축</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+
+    st.write("")
+    
+    # 3-Year Plan
+    with st.container():
+        st.markdown("#### 🚀 2단계: 확장 및 글로벌 도약 (3년 이내)")
+        tc3, tc4 = st.columns(2)
+        with tc3:
+            st.markdown("""
+                <div style="background: white; padding: 1.5rem; border-radius: 15px; border: 1px solid #E0E0E0; height: 100%; color: #333;">
+                    <b style="color: #1976D2; font-size: 1.1rem;">📈 사업 다각화</b>
+                    <ul style="margin-top: 10px; font-size: 0.9rem;">
+                        <li><b>대형 OEM:</b> 저가 커피 프랜차이즈 본사 연간 계약</li>
+                        <li><b>라인업 확장:</b> 버섯 포장재, 화분, 단열 벽지 출시</li>
+                        <li><b>글로벌 진출:</b> 북미/유럽 수출 개시 (10만 불 목표)</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+        with tc4:
+            st.markdown("""
+                <div style="background: #E3F2FD; padding: 1.5rem; border-radius: 15px; border: 1px solid #BBDEFB; height: 100%; color: #333;">
+                    <b style="color: #1976D2; font-size: 1.1rem;">📢 마케팅 전략</b>
+                    <ul style="margin-top: 10px; font-size: 0.9rem;">
+                        <li><b>본사 집중 공략:</b> 원가 절감 + ESG 성과 제안서 영업</li>
+                        <li><b>글로벌 매칭:</b> 아마존 비즈니스 등 통한 바이어 발굴</li>
+                        <li><b>콜라보레이션:</b> 대형 브랜드와 'Earth Saving' 굿즈 제작</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+
+# Q&A Section (Chatbot)
+elif menu == "Q&A":
+    st.title("🤖 버컵(Burcup) AI 챗봇")
+    st.markdown("써클리프와 버컵에 대해 궁금한 점을 무엇이든 물어보세요.")
+    st.write("")
+
+    # Initialize Chat Model
+    if "openai_api_key" not in st.session_state:
+        st.session_state.openai_api_key = os.getenv("OPENAI_API_KEY")
+
+    if not st.session_state.openai_api_key:
+        st.warning("챗봇 기능을 이용하려면 .env 파일에 OPENAI_API_KEY를 설정해주세요.")
+    else:
+        # Chat History Initialization
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+        # Display Chat History
+        for message in st.session_state.messages:
+            with st.chat_message(message.type):
+                st.markdown(message.content)
+
+        # Chat Input
+        if prompt := st.chat_input("버컵의 특성에 대해 알려주세요!"):
+            # User Message
+            user_msg = HumanMessage(content=prompt)
+            st.session_state.messages.append(user_msg)
+            with st.chat_message("human"):
+                st.markdown(prompt)
+
+            # AI Response Generation
+            with st.chat_message("assistant"):
+                try:
+                    chat = ChatOpenAI(
+                        model="gpt-5-nano-2025-08-07",
+                        api_key=st.session_state.openai_api_key,
+                        temperature=0.7,
+                        streaming=True
+                    )
+                    
+                    # System Message with business info
+                    system_content = f"""
+                    당신은 '주식회사 써클리프(CIRCLEAF)'의 비즈니스 어시스턴트입니다. 
+                    다음은 회사와 제품(버컵, Burcup)에 대한 정보입니다:
+                    {json.dumps(business_data, ensure_ascii=False, indent=2)}
+                    
+                    사용자의 질문에 대해 위의 데이터를 바탕으로 친절하고 전문적으로 답변하십시오. 
+                    데이터에 없는 내용은 아는 범위 내에서 답변하되, 회사 공식 정보가 아님을 명시하십시오.
+                    한국어로 답변하십시오.
+                    """
+                    
+                    messages = [SystemMessage(content=system_content)] + st.session_state.messages
+                    
+                    # Streamed response
+                    full_response = ""
+                    message_placeholder = st.empty()
+                    
+                    for chunk in chat.stream(messages):
+                        full_response += chunk.content
+                        message_placeholder.markdown(full_response + "▌")
+                    
+                    message_placeholder.markdown(full_response)
+                    st.session_state.messages.append(AIMessage(content=full_response))
+                    
+                except Exception as e:
+                    st.error(f"오류가 발생했습니다: {str(e)}")
 
 # Partnership Section
 elif menu == "파트너십":
@@ -579,9 +879,9 @@ elif menu == "파트너십":
         
         st.markdown("""
             <div style="margin-top: 2rem;">
-                <p>📍 <b>본사/공장</b>: 경기도 평택시 써클리프 생산센터</p>
-                <p>📧 <b>이메일</b>: contact@circleaf.com</p>
-                <p>📞 <b>대표번호</b>: 031-123-4567</p>
+                <p>📍 <b>본사</b>: 경기도 평택시 산단로 76,평택하이테크지식산업센터 A동 5층 512호</p>
+                <p>📧 <b>이메일</b>: contact@circleaf.co.kr</p>
+                <p>📞 <b>대표번호</b>: 031-8094-5723</p>
                 <p>⏰ <b>운영시간</b>: 평일 09:00 - 18:00</p>
             </div>
         """, unsafe_allow_html=True)
@@ -594,7 +894,7 @@ elif menu == "파트너십":
             with f1:
                 name = st.text_input("성함 / 업체명", placeholder="홍길동 / 버컵카페")
             with f2:
-                category = st.selectbox("문의 유형", ["샘플 신청", "대량 구매 문의", "농가 협력 제안", "기타 문의"])
+                category = st.selectbox("문의 유형", ["샘플 신청", "대량 구매 문의", "농가 협력 제안", "투자 문의", "기타 문의"])
                 
             email = st.text_input("이메일 주소", placeholder="example@email.com")
             message = st.text_area("상세 내용", placeholder="문의하실 내용을 적어주세요.", height=150)
