@@ -22,10 +22,10 @@ def send_email(name, sender_email, category, message):
     msg = MIMEMultipart()
     msg['From'] = sender
     msg['To'] = receiver
-    msg['Subject'] = f"[버컵 문의] {category} - {name}님"
+    msg['Subject'] = f"[버컵(Burcup) 문의] {category} - {name}님"
     
     body = f"""
-    버컵 홈페이지를 통해 새로운 문의가 접수되었습니다.
+    버컵(Burcup) 홈페이지를 통해 새로운 문의가 접수되었습니다.
     
     - 성함/업체명: {name}
     - 이메일: {sender_email}
@@ -48,7 +48,7 @@ def send_email(name, sender_email, category, message):
 
 # Page configuration
 st.set_page_config(
-    page_title="버컵 (Vercup) - 친환경 버섯 폐배지 컵홀더",
+    page_title="버컵 (Burcup) - 친환경 버섯 폐배지 컵홀더 | 써클리프(CIRCLEAF)",
     page_icon="🍄",
     layout="wide"
 )
@@ -60,9 +60,9 @@ def load_image(img_name):
         return Image.open(path)
     return None
 
-logo = load_image("Vercup.png")
-promo1 = load_image("Vercup_1.png")
-promo2 = load_image("Vercup_2.png")
+logo = load_image("burcup.png")
+promo1 = load_image("burcup1.png")
+promo2 = load_image("burcup2.png")
 
 # Custom CSS for better UI (Light/Dark mode compatible)
 st.markdown("""
@@ -130,7 +130,7 @@ with st.sidebar:
     if logo:
         st.image(logo, width='stretch')
     else:
-        st.title("🍄 버컵 (Vercup)")
+        st.title("🍄 버컵 (Burcup) | 써클리프")
     
     st.markdown("---")
     
@@ -169,7 +169,7 @@ if menu == "홈":
             border: 1px solid rgba(46, 125, 50, 0.1);
         ">
             <h1 style="font-size: 3.5rem; color: #2E7D32; margin-bottom: 0.5rem;">버섯 폐배지의 놀라운 변신</h1>
-            <h2 style="font-size: 1.8rem; color: #43A047; font-weight: 400; margin-bottom: 2rem;">지속 가능한 미래를 위한 친환경 솔루션, <b>버컵(Vercup)</b></h2>
+            <h2 style="font-size: 1.8rem; color: #43A047; font-weight: 400; margin-bottom: 2rem;">지속 가능한 미래를 위한 친환경 솔루션, <b>버컵(Burcup) by 써클리프(CIRCLEAF)</b></h2>
             <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.6; opacity: 0.8;">
                 우리는 버려지는 자원에 새로운 가치를 부여합니다. 종이 사용을 줄이고 환경을 보호하며, 
                 카페 운영의 효율성을 높이는 혁신적인 버섯 폐배지 컵홀더를 만나보세요.
@@ -180,7 +180,7 @@ if menu == "홈":
     col1, col2 = st.columns([1, 1.2], gap="large")
     
     with col1:
-        st.markdown("### 🌱 Why Vercup?")
+        st.markdown("### 🌱 Why Burcup?")
         st.write("")
         
         # Value Propositions as cards
@@ -202,7 +202,7 @@ if menu == "홈":
     with col2:
         if promo1:
             st.image(promo1, width='stretch')
-            st.caption("버컵(Vercup) - 자연에서 와서 자연으로 돌아가는 기술")
+            st.caption("버컵(Burcup) by 써클리프(CIRCLEAF) - 자연에서 와서 자연으로 돌아가는 기술")
 
     st.write("")
     st.divider()
@@ -382,7 +382,7 @@ elif menu == "비즈니스 모델":
     bmc = {
         "KP": {"title": "핵심 파트너", "icon": "🤝", "content": "버섯 폐배지 공급 농가, 컵홀더 양산 공장, B2B 고객사(프랜차이즈 등)"},
         "KA": {"title": "핵심 활동", "icon": "⚙️", "content": "생산 공정 수립, 공장 관리, B2B 영업 및 마케팅, 예비 고객사 샘플 제공"},
-        "KR": {"title": "핵심 자원", "icon": "🏗️", "content": "버컵 팀원, 폐버섯 재활용 아이디어 및 브랜드 IP"},
+        "KR": {"title": "핵심 자원", "icon": "🏗️", "content": "써클리프(CIRCLEAF) 팀원, 폐버섯 재활용 아이디어 및 브랜드 IP(버컵, Burcup)"},
         "VP": {"title": "가치 제안", "icon": "💎", "content": "폐배지 재활용 환경 보호, 종이 사용 감소, 획기적 원가 절감 및 단열 성능"},
         "CR": {"title": "고객 관계", "icon": "❤️", "content": "1:1 전담 응대, SNS 실시간 소통 및 피드백 반영"},
         "CH": {"title": "채널", "icon": "📢", "content": "홍보 홈페이지, SNS 광고, B2B 직접 영업, 펀딩(시장성 검증)"},
@@ -536,7 +536,7 @@ elif menu == "Q&A":
 # Partnership Section
 elif menu == "파트너십":
     st.title("🤝 파트너십 문의")
-    st.markdown("버컵과 함께 지속 가능한 미래를 만들어갈 파트너를 찾습니다.")
+    st.markdown("써클리프(CIRCLEAF)와 함께 지속 가능한 미래를 만들어갈 파트너를 찾습니다.")
     st.write("")
     
     # Partnership Types with Cards
@@ -544,7 +544,7 @@ elif menu == "파트너십":
     p1, p2, p3 = st.columns(3)
     
     partners = [
-        {"icon": "☕", "title": "카페 점주님", "desc": "차별화된 친환경 이미지를 구축하고 고객에게 특별한 가치를 전달하세요."},
+        {"icon": "☕", "title": "카페 점주님", "desc": "버컵(Burcup)으로 차별화된 친환경 이미지를 구축하고 고객에게 특별한 가치를 전달하세요."},
         {"icon": "🚜", "title": "농가 파트너", "desc": "버려지는 폐배지를 새로운 수익원으로 전환하고 자원 순환에 동참하세요."},
         {"icon": "📦", "title": "유통 및 프랜차이즈", "desc": "혁신적인 친환경 제품 라인업을 확보하여 ESG 경영을 실천하세요."}
     ]
@@ -579,8 +579,8 @@ elif menu == "파트너십":
         
         st.markdown("""
             <div style="margin-top: 2rem;">
-                <p>📍 <b>본사/공장</b>: 경기도 평택시 버컵 생산센터</p>
-                <p>📧 <b>이메일</b>: contact@vercup.com</p>
+                <p>📍 <b>본사/공장</b>: 경기도 평택시 써클리프 생산센터</p>
+                <p>📧 <b>이메일</b>: contact@circleaf.com</p>
                 <p>📞 <b>대표번호</b>: 031-123-4567</p>
                 <p>⏰ <b>운영시간</b>: 평일 09:00 - 18:00</p>
             </div>
@@ -617,7 +617,7 @@ st.divider()
 st.markdown(
     """
     <div style="text-align: center; color: #666;">
-        <p>© 2026 버컵(Vercup) | 경기도 평택시 버컵 생산센터 | contact@vercup.com</p>
+        <p>© 2026 써클리프(CIRCLEAF) | 버컵(Burcup) | 경기도 평택시 써클리프 생산센터 | contact@circleaf.com</p>
     </div>
     """,
     unsafe_allow_html=True
