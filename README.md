@@ -5,4 +5,5 @@
 회사명/브랜드명: 써클리프(CIRCLEAF)
 제품명: 버컵(Burcup)
 
-https://mushroom-recycle.streamlit.app/
+[https://mushroom-recycle.streamlit.app/](https://burcup.streamlit.app/)
+
